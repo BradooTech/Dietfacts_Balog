@@ -1,32 +1,87 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 
 
 <odoo>
     <data>
     <!-- Adicionado fields na treeview do product -->
-        <record id="dietfacts_product_template_tree_view" model="ir.ui.view">
-            <field name="inherit_id" ref="product.product_template_tree_view"/>
-            <field name="model">product.template</field>
-            <field name="arch" type="xml">
-                <field name="categ_id" position="after">
-                    <field name="calories"/>
-                    <field name="calories"/>
-                    <field name="servingsize"/>
-                    <field name="lastupdate"/>
+        <record id='dietfacts_product_template_tree_view' model='ir.ui.view'>
+            <field name='inherit_id' ref='product.product_template_tree_view'/>
+            <field name='model'>product.template</field>
+            <field name='arch' type='xml'>
+                <field name='categ_id' position='after'>
+                    <field name='calories'/>
+                    <field name='calories'/>
+                    <field name='servingsize'/>
+                    <field name='lastupdate'/>
                 </field>
             </field>
         </record>
     <!-- Adicionando fields na formview do product -->
-        <record id="dietfacts.product_template_only_form_view" model="ir.ui.view">
-            <field name="inherit_id" ref="product.product_template_only_form_view"/>
-            <field name="model">product.template</field>
-            <field name="arch" type="xml">
-                <field name="barcode" position="after">
-                    <field name="calories"/>
-                    <field name="servingsize"/>
-                    <field name="lastupdate"/>
+        <record id='dietfacts.product_template_only_form_view' model='ir.ui.view'>
+            <field name='inherit_id' ref='product.product_template_only_form_view'/>
+            <field name='model'>product.template</field>
+            <field name='arch' type='xml'>
+                <field name='barcode' position='after'>
+                    <field name='calories'/>
+                    <field name='servingsize'/>
+                    <field name='lastupdate'/>
                 </field>
         </field>
         </record>
+
+
+
+
+      <record model='ir.actions.act_window' id='action_views_dietfacts_products_low_calories'>
+            <field name='name'>Low calories</field>
+            <field name='res_model'>product.template</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <!-- <field name='context'> {'search_default_filter_to_sell':1, 'deafult_dietitem'} -->
+            <field name='context'> {'default_categ_id':7}</field>
+            <field name='domain'>[('categ_id.name','=','Diet Items')]</field>
+            <!-- <field name='domain>[('Diet Item','=',True)]</field>' -->
+            <field name='help' type='html'>
+                <p class='oe_view_nocontent_create'>
+                    Click to create a new Product
+                </p>
+                <p>
+                    Here you can enter your product details
+                </p>
+            </field>
+</record>
+
+
+<record model='ir.actions.act_window' id='action_views_dietfacts_meal'>
+            <field name='name'>Meals</field>
+            <field name='res_model'>res.users.meal</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,kanba,form</field>
+            <field name='help' type='html'>
+                <p class='oe_view_nocontent_create'>
+                    Click to define a new Meal.
+                </p>
+            </field>
+</record>
+
+
+
+
+    <menuitem id='menu_dietfacts_root'
+                    name='DietFacts'
+                    web_icon='openacademy,static/description/icon2.png'/>
+
+        <menuitem id='menu_dietfacts_root_products'
+                    name='Prodcts'
+                    parent='menu_dietfacts_root'/>
+
+        <menuitem id='menu_action_views_dietfacts_products_low_calories'
+                    action='action_views_dietfacts_products_low_calories'
+parent='menu_dietfacts_root_products'/>
+
+        <menuitem id='menu_dietfacts_root_meal'
+                    name='Meals'
+                    action='action_views_dietfacts_meal'
+                    parent='menu_dietfacts_root'/>        
     </data>
 </odoo>
