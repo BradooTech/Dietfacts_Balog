@@ -10,7 +10,7 @@
             <field name='arch' type='xml'>
                 <field name='categ_id' position='after'>
                     <field name='calories'/>
-                    <field name='calories'/>
+                    <field name='nutrition_score'/>
                     <field name='servingsize'/>
                     <field name='lastupdate'/>
                 </field>
@@ -23,6 +23,7 @@
             <field name='arch' type='xml'>
                 <field name='barcode' position='after'>
                     <field name='calories'/>
+                    <field name='nutrition_score'/>
                     <field name='servingsize'/>
                     <field name='lastupdate'/>
                 </field>
@@ -98,6 +99,7 @@
                         <field name='meal_date'/>
                         <field name='user_id'/>
                         <field name='totalcalories'/>
+                        <field name='largemeal'/>
                         <field name='totalitems'/>
                         <field name='notes'/>
                     </group>
@@ -152,6 +154,8 @@
                         <menuitem id='menu_dietfacts_root_nutrients'
                             name='Nutrient'
                             action='action_views_dietfacts_nutrient'
-                            parent='menu_dietfacts_root'/>        
-                        </data>
-                    </odoo>
+                            parent='menu_dietfacts_root'/>  
+
+</data>
+
+</odoo>

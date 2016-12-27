@@ -30,7 +30,9 @@ Informations about calories, etc
         'views/views.xml',
         'views/templates.xml',
         'views/dietfacts_view.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'reports/product.nutrition_report.xml',
+        'reports/product.nutrition_report_template.xml'
         ],
     # only loaded in demonstration mode
     'demo': [

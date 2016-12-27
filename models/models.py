@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _, exceptions
 
 class DietFacts_product_template(models.Model):
 	_name = 'product.template'
@@ -10,6 +10,31 @@ class DietFacts_product_template(models.Model):
 	servingsize = fields.Float('Serving Size')
 	lastupdate = fields.Date('Last Update')
 	meal_nutrient_ids = fields.One2many('product.template.nutrient','product_id')
+	nutrition_score = fields.Float(string='Nutrition Score', store=True, compute='_calcscore')
+	
+	@api.multi
+	@api.depends('meal_nutrient_ids','meal_nutrient_ids.value','meal_nutrient_ids.uom')
+	def _calcscore(self):
+		currentscore = 0
+		i = 0
+		for nutrient in self.meal_nutrient_ids:
+			try:
+				if nutrient.uom == 'g' or nutrient.uom == 'mg' or nutrient.uom == 'Kg':
+					if nutrient.uom == 'g':
+						nutrient.value *= 1000
+						currentscore += nutrient.value
+					i += 1		
+				else:
+					raise ValidationError(_("Erro"))
+			except:
+				raise exceptions.ValidationError(_("Erro"))
+		if i == 0:
+			currentscore = 0	
+		else:
+			currentscore /= i
+		self.nutrition_score = currentscore
+
+
 	#dietitem = fields.Boolean("Diet Item")
 
 class DietFacts_res_users_meal(models.Model):
@@ -22,7 +47,14 @@ class DietFacts_res_users_meal(models.Model):
 	totalitems = fields.Integer(string='Total Meal Items', store=True, compute='_totalitems')
 	notes = fields.Text('Meal Notes')
 	dailyvalue = fields.Float('Daily Value')
+	largemeal = fields.Boolean('Large Meal')
 
+	@api.onchange('totalcalories')
+	def check_totalcalories(self):
+		if self.totalcalories > 500:
+			self.largemeal = True
+		else:
+			self.largemal = False
 	@api.multi
 	@api.depends('item_ids','item_ids.servings')
 	def _calccalories(self):
@@ -54,6 +86,7 @@ class DietFacts_product_nutrient(models.Model):
 	name = fields.Char('Nutrient Name')
 	uom_id = fields.Many2one('product.uom','Unity of Measure')
 	description = fields.Text('Nutrient Description')
+
 
 class DietFacts_product_template_nutrients(models.Model):
 	_name = 'product.template.nutrient'
