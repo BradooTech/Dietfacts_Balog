@@ -27,22 +27,20 @@
                     <field name='servingsize'/>
                     <field name='lastupdate'/>
                 </field>
-            <notebook>
-                <page name='Nutrient' string='Nutrient' attrs="{'invisible':[('categ_id','!=',7)]}">
-                    <field name='meal_nutrient_ids' widget='one2many_list'>
-                        <tree string='Menu Items' editable='bottom'>
-                            <field name='nutrient_id'/>
-                            <field name='value'/>
-                            <field name='uom'/>
-                            <field name='dailypercent'/>
-                        </tree>
-                    </field>
-                </page>
-            </notebook>
+                <notebook>
+                    <page name='Nutrient' string='Nutrient' attrs="{'invisible':[('categ_id','!=',7)]}">
+                        <field name='meal_nutrient_ids' widget='one2many_list'>
+                            <tree string='Menu Items' editable='bottom'>
+                                <field name='nutrient_id'/>
+                                <field name='value'/>
+                                <field name='uom'/>
+                                <field name='dailypercent'/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
             </field>
         </record>
-
-
 
 
         <record model='ir.actions.act_window' id='action_views_dietfacts_products_low_calories'>
@@ -53,6 +51,7 @@
             <!-- <field name='context'> {'search_default_filter_to_sell':1, 'deafult_dietitem'} -->
             <field name='context'> {'default_categ_id':7}</field>
             <field name='domain'>[('categ_id.name','=','Diet Items')]</field>
+            <field name='auto_search'>True</field>
             <!-- <field name='domain>[('Diet Item','=',True)]</field>' -->
             <field name='help' type='html'>
                 <p class='oe_view_nocontent_create'>
@@ -65,11 +64,30 @@
         </record>
 
 
+        <record id="view_meal_filter" model="ir.ui.view">
+            <field name="name">meal.select</field>
+            <field name="model">res.users.meal</field>
+            <field name="arch" type="xml">
+                <search string="Search Meal">
+
+                    <filter name="totalitems" string="Total Items" domain="[('totalitems','>',2)]"/>
+                    <separetor/>
+                    <filter name="totalcalories" string="Total Calories" domain="[('totalcalories','>',1000)]"/>
+                </search>
+            </field>
+        </record>
+
+
+
         <record model='ir.actions.act_window' id='action_views_dietfacts_meal'>
             <field name='name'>Meals</field>
             <field name='res_model'>res.users.meal</field>
             <field name='view_type'>form</field>
             <field name='view_mode'>tree,kanba,form</field>
+            <field name='target'>main</field>
+            <field name='limit'>2</field>
+            <field name="search_view_id" ref="view_meal_filter"/>
+            <field name='view_id' ref='dietfacts.meal_tree_view'/>
             <field name='help' type='html'>
                 <p class='oe_view_nocontent_create'>
                     Click to define a new Meal.
@@ -156,6 +174,6 @@
                             action='action_views_dietfacts_nutrient'
                             parent='menu_dietfacts_root'/>  
 
-</data>
+                        </data>
 
-</odoo>
+                    </odoo>

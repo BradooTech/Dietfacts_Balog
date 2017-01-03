@@ -7,9 +7,13 @@
 				<t t-call="report.external_layout">
 					<div class="page">
 						<div class="oe_structure"/>
+						<p t-if='o.categ_id.id == 7'>Nutrition Reports</p>
+						<p t-elif='o.categ_id.id == 3'>Products Reports</p>
+						<p t-else=''>Products</p>
 						<h1>Nutrition Report</h1>
 						<h2>Product Name: <span t-field="o.name"/></h2>
 						<p>Calories: <span t-field="o.calories"/></p>
+						<p>Calories: <span t-field="o.categ_id.id"/></p>
 						<p>Serving Size: <span t-field="o.servingsize"/></p>
 						<p>Nutrition score: <span t-field="o.nutrition_score"/></p>
 						<h3>Nutrition Details</h3>
@@ -21,11 +25,20 @@
 								<div class="col-xs-4">
 									<span t-field="nutrient.value"/>
 								</div>
-								<div class="col-xs-0">
+								<div class="col-xs-2">
 									<span t-field="nutrient.uom"/>
 								</div>
 							</div>
 						</t>
+						<t t-set="i" t-value="1"/>
+
+
+						<tr t-foreach="o.name" t-as="l">
+							<td> <span t-esc="i"/> </td>
+
+
+							<t t-set="i" t-value="i+1"/>
+						</tr>
 					</div>
 				</t>
 			</t>
