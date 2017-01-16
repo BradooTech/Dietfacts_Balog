@@ -3,91 +3,110 @@
 
 <odoo>
     <data>
-        <!-- Adicionado fields na treeview do product -->
-        <record id='dietfacts_product_template_tree_view' model='ir.ui.view'>
-            <field name='inherit_id' ref='product.product_template_tree_view'/>
-            <field name='model'>product.template</field>
-            <field name='arch' type='xml'>
-                <field name='categ_id' position='after'>
-                    <field name='calories'/>
-                    <field name='nutrition_score'/>
-                    <field name='servingsize'/>
-                    <field name='lastupdate'/>
-                </field>
+      <!-- Adicionado fields na treeview do product do modulo Dietfacts -->
+      <record id='dietfacts_product_template_tree_view' model='ir.ui.view'>
+        <field name='inherit_id' ref='product.product_template_tree_view'/>
+        <field name='model'>product.template</field>
+        <field name='arch' type='xml'>
+            <field name='categ_id' position='after'>
+                <field name='calories'/>
+                <field name='nutrition_score'/>
+                <field name='servingsize'/>
+                <field name='lastupdate'/>
             </field>
-        </record>
-        <!-- Adicionando fields na formview do product -->
-        <record id='dietfacts.product_template_only_form_view' model='ir.ui.view'>
-            <field name='inherit_id' ref='product.product_template_only_form_view'/>
-            <field name='model'>product.template</field>
-            <field name='arch' type='xml'>
-                <field name='barcode' position='after'>
-                    <field name='calories'/>
-                    <field name='nutrition_score'/>
-                    <field name='servingsize'/>
-                    <field name='lastupdate'/>
-                </field>
-                <notebook>
-                    <page name='Nutrient' string='Nutrient' attrs="{'invisible':[('categ_id','!=',7)]}">
-                        <field name='meal_nutrient_ids' widget='one2many_list'>
-                            <tree string='Menu Items' editable='bottom'>
-                                <field name='nutrient_id'/>
-                                <field name='value'/>
-                                <field name='uom'/>
-                                <field name='dailypercent'/>
-                            </tree>
-                        </field>
-                    </page>
-                </notebook>
+        </field>
+    </record>
+    <!-- Adicionando fields na formview do product do modulo Dietfacts -->
+    <record id='dietfacts.product_template_only_form_view' model='ir.ui.view'>
+        <field name='inherit_id' ref='product.product_template_only_form_view'/>
+        <field name='model'>product.template</field>
+        <field name="res_id">4</field>
+        <field name='arch' type='xml'>
+            <field name='barcode' position='after'>
+                <field name='calories'/>
+                <field name='nutrition_score'/>
+                <field name='servingsize'/>
+                <field name='lastupdate'/>
             </field>
-        </record>
+            <notebook>
+                <page name='Nutrient' string='Nutrient' attrs="{'invisible':[('categ_id','!=',7)]}">
+                    <field name='meal_nutrient_ids' widget='one2many_list'>
+                        <tree string='Menu Items' editable='bottom'>
+                            <field name='nutrient_id'/>
+                            <field name='value'/>
+                            <field name='uom'/>
+                            <field name='dailypercent'/>
+                        </tree>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <!-- Adicionando as views de produtos Low Calories e inserindo seu filtro-->
+    <record model='ir.actions.act_window' id='action_views_dietfacts_products_low_calories'>
+        <field name='name'>Low calories</field>
+        <field name='res_model'>product.template</field>
+        <field name='view_type'>form</field>
+        <field name='view_mode'>tree,form</field>
+        <!-- <field name='context'> {'search_default_filter_to_sell':1, 'deafult_dietitem'} -->
+        <field name='context'> {'default_categ_id':7}</field>
+        <field name='domain'>[('categ_id.name','=','Diet Items')]</field>
+        <field name='auto_search'>True</field>
+        <!-- <field name='domain>[('Diet Item','=',True)]</field>' -->
+        <field name='help' type='html'>
+            <p class='oe_view_nocontent_create'>
+                Click to create a new Product
+            </p>
+            <p>
+                Here you can enter your product details
+            </p>
+        </field>
+    </record>
 
 
-        <record model='ir.actions.act_window' id='action_views_dietfacts_products_low_calories'>
-            <field name='name'>Low calories</field>
-            <field name='res_model'>product.template</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <!-- <field name='context'> {'search_default_filter_to_sell':1, 'deafult_dietitem'} -->
-            <field name='context'> {'default_categ_id':7}</field>
-            <field name='domain'>[('categ_id.name','=','Diet Items')]</field>
-            <field name='auto_search'>True</field>
-            <!-- <field name='domain>[('Diet Item','=',True)]</field>' -->
-            <field name='help' type='html'>
-                <p class='oe_view_nocontent_create'>
-                    Click to create a new Product
-                </p>
-                <p>
-                    Here you can enter your product details
-                </p>
-            </field>
-        </record>
+    <!-- Adicionando as views de Nutrients -->
+    <record model='ir.actions.act_window' id='action_views_dietfacts_nutrient'>
+        <field name='name'>Nutrient</field>
+        <field name='res_model'>product.nutrient</field>
+        <field name='view_type'>form</field>
+        <field name='view_mode'>tree,kanba,form</field>
+        <field name='help' type='html'>
+            <p class='oe_view_nocontent_create'>
+                Click to define a new Nutrition.
+            </p>
+        </field>
+    </record>
 
 
-        <record id="view_meal_filter" model="ir.ui.view">
-            <field name="name">meal.select</field>
-            <field name="model">res.users.meal</field>
-            <field name="arch" type="xml">
-                <search string="Search Meal">
-
-                    <filter name="totalitems" string="Total Items" domain="[('totalitems','>',2)]"/>
-                    <separetor/>
-                    <filter name="totalcalories" string="Total Calories" domain="[('totalcalories','>',1000)]"/>
-                </search>
-            </field>
-        </record>
+    <!-- Adicionando a search_view -->
+    <record id="view_meal_filter" model="ir.ui.view">
+        <field name="name">meal.select</field>
+        <field name="model">res.users.meal</field>
+        <field name="arch" type="xml">
+            <search string="Search Meal">
+                <filter name="totalitems" string="Total Items" domain="[('totalitems','>',2)]"/>
+                <separetor/>
+                <filter name="totalcalories" string="Total Calories" domain="[('totalcalories','>',1000)]"/>
+            </search>
+        </field>
+    </record>
 
 
 
-        <record model='ir.actions.act_window' id='action_views_dietfacts_meal'>
-            <field name='name'>Meals</field>
-            <field name='res_model'>res.users.meal</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,kanba,form</field>
-            <field name='target'>main</field>
-            <field name='limit'>2</field>
-            <field name="search_view_id" ref="view_meal_filter"/>
-            <field name='view_id' ref='dietfacts.meal_tree_view'/>
+    <!-- Adicionando as views de Meals -->
+    <record model='ir.actions.act_window' id='action_views_dietfacts_meal'>
+        <field name='name'>Meals</field>
+        <field name='res_model'>res.users.meal</field>
+        <field name='view_type'>form</field>
+        <!-- Definindo o limite de itens por pagina (Paginação) -->
+        <field name='limit'>80</field>
+        <!-- Inserindo a search view -->
+        <field name="search_view_id" ref="view_meal_filter"/>
+        <!-- Referenciando views especificas para serem usadas quando a view for carregada -->
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('dietfacts.meal_tree_view')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('dietfacts.meal_form_view')})]"/>
             <field name='help' type='html'>
                 <p class='oe_view_nocontent_create'>
                     Click to define a new Meal.
@@ -95,21 +114,13 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='action_views_dietfacts_nutrient'>
-            <field name='name'>Nutrient</field>
-            <field name='res_model'>product.nutrient</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,kanba,form</field>
-            <field name='help' type='html'>
-                <p class='oe_view_nocontent_create'>
-                    Click to define a new Nutrition.
-                </p>
-            </field>
-        </record>
 
+        <!-- Adicionando a form view de Meals-->
         <record id='dietfacts.meal_form_view' model='ir.ui.view'>
+            <field name='name'>res.users.meal.form</field>
             <field name='model'>res.users.meal</field>
             <field name='view_type'>form</field>
+            <field name='res_id'>3</field>
             <field name='arch' type='xml'>
                 <form>
                     <group>
@@ -118,8 +129,9 @@
                         <field name='user_id'/>
                         <field name='totalcalories'/>
                         <field name='largemeal'/>
-                        <field name='totalitems'/>
+                        <field name='totalitems'/>/
                         <field name='notes'/>
+                        <button string="clique" type="action" icon="fa-refresh text-primary" name="%(meal_action_dietfacts_form)d"/>
                     </group>
                     <notebook>
                         <page name='mealitems' string='Meal Items'>
@@ -137,9 +149,13 @@
             </field>
         </record>
 
+
+        <!-- Adicionando a tree view de Meals-->
         <record id='dietfacts.meal_tree_view' model='ir.ui.view'>
+            <field name='name'>res.users.meal.tree</field>
             <field name='model'>res.users.meal</field>
             <field name='view_type'>tree</field>
+            <field name='limit'>80</field>
             <field name='arch' type='xml'>
                 <tree string='Meal'>
                     <field name='name'/>
@@ -148,32 +164,42 @@
                     <field name='totalcalories'/>
                     <field name='totalitems'/>
                     <field name='notes'/>
+                    <button string="clique" type="action" icon="fa-refresh text-primary" name="%(meal_action_dietfacts_tree)d"/>
                 </tree>
             </field>
         </record>
 
+
+
+        <!-- Adicionando os Menus -->
+
+        <!-- Adicionando o Modulo na tela de APPs
+             Para adicionarmos um icone devemos colocar o modulo seguindo do caminho do icone -->
         <menuitem id='menu_dietfacts_root'
             name='DietFacts'
-            web_icon='openacademy,static/description/icon2.png'/>
+            web_icon='dietfacts,static/description/icon2.png'/>
 
+            <!-- Adicionando um menu dentro do modulo / Devemos referenciar o menu superior-->
             <menuitem id='menu_dietfacts_root_products'
                 name='Prodcts'
                 parent='menu_dietfacts_root'/>
 
+                <!-- Adicionando um menu dentro de outro menu / Devemos referenciar o menu superior-->
                 <menuitem id='menu_action_views_dietfacts_products_low_calories'
                     action='action_views_dietfacts_products_low_calories'
                     parent='menu_dietfacts_root_products'/>
 
+                    <!-- Adicionando um menu dentro do modulo / Devemos referenciar o menu superior-->
                     <menuitem id='menu_dietfacts_root_meal'
                         name='Meals'
                         action='action_views_dietfacts_meal'
                         parent='menu_dietfacts_root'/>        
 
+                        <!-- Adicionando um menu dentro do modulo / Devemos referenciar o menu superior-->
                         <menuitem id='menu_dietfacts_root_nutrients'
                             name='Nutrient'
                             action='action_views_dietfacts_nutrient'
                             parent='menu_dietfacts_root'/>  
 
                         </data>
-
                     </odoo>

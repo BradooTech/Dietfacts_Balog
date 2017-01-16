@@ -47,7 +47,21 @@ class DietFacts_res_users_meal(models.Model):
 	totalitems = fields.Integer(string='Total Meal Items', store=True, compute='_totalitems')
 	notes = fields.Text('Meal Notes')
 	dailyvalue = fields.Float('Daily Value')
-	largemeal = fields.Boolean('Large Meal')
+	largemeal = fields.Boolean('Large Meal', readonly=True)
+
+
+	@api.multi
+	@api.depends('notes')
+ 	def _msg_ola(self):
+ 		msg = 'Olá'
+ 		self.notes = msg
+
+ 	@api.multi
+ 	def _atualiza(self):
+ 		action1 = {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
 	@api.onchange('totalcalories')
 	def check_totalcalories(self):

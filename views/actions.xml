@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<odoo>
+	<data>
+		<!-- Action que sera usado para teste na form view -->
+		<record id="meal_action_dietfacts_form" model="ir.actions.server">
+			<field name="name">Teste de action na form</field>
+			<field name="model_id" ref="model_res_users_meal"/>
+			<field name="state">code</field>
+			<field name="code">
+if True:
+	records._msg_ola()        
+			</field>
+		</record>
+
+		<!-- Action que sera usado para teste na tree view -->
+		<record id="meal_action_dietfacts_tree" model="ir.actions.server">
+			<field name="name">Teste de action na tree</field>
+			<field name="model_id" ref="model_res_users_meal"/>
+			<field name="state">code</field>
+			<field name="code">
+if True:
+	records._atualiza()
+			</field>
+		</record>
+	</data>
+</odoo>
